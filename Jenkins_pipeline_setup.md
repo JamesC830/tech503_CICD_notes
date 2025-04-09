@@ -61,10 +61,11 @@ If you have created 2 jobs, you can chain them together. This means that the sec
 When configuring your job in Jenkins:
 - Select Github project:
   - Add your Github repo url from the search bar with ```/``` at the end as the url
+  - <img src="./Images/giturl.png" alt="alt text" width="300"/>
   - Source code management:
     - Git (see image below)
       - Repository URL: get this from the green code<> button on github, specifically the ssh key
-      - ![alt text](./Images/github_code_url.png)
+      - <img src="./Images/github_code_url.png" alt="alt text" width="300"/>
       - In credentials,select ssh username as kind. Put your private ssh key. This includes all the bits that the ```cat``` function pastes (i.e. the ```----Somethin-----``` at the top and bottom)
       - Branch specifier: ```*/dev``` for setting up webhook
 - Build environment: 
