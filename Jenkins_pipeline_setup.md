@@ -1,5 +1,7 @@
 # Jenkins pipeline setup notes
 
+# CI - Continuous Integration
+
 Before you start you should have a private Github repo setup with the unzipped files you need
 
 ## Creating a job
