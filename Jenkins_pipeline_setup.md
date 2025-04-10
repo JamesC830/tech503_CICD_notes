@@ -1,5 +1,9 @@
 # Jenkins pipeline setup notes
 
+### CI Pipeline diagram
+
+![alt text](./Images/CI_pipeline.png)
+
 # CI - Continuous Integration
 
 Before you start you should have a private Github repo setup with the unzipped files you need
@@ -24,7 +28,7 @@ In Jenkins:
 
 <img src="./Images/output_dropdown.png" alt="alt text" width="200"/>
 
-Select console output
+Select console output from the dropdown menu you get when hovering over the number. Below shows an example console output.
 
 <img src="./Images/console_output.png" alt="alt text" width="400"/>
 
@@ -101,3 +105,30 @@ Back to local git repo:
 - Switch to the dev branch: ```git checkout -b dev```
 - Make a change (e.g. to README)
 - Push to github: ```git push -u origin dev```
+
+## Setting up a merge
+
+Make a second Jenkins job:
+- Name: james-job2-ci-merge-test
+- Copy from: your first job (e.g. james-job1-ci-test) which duplicates the first job
+- Settings to change:
+  - Remove build trigger
+  - Remove build steps
+  - Post build action:
+    - Git publisher
+    - Push only if build succeeds
+    - Merge results
+    - Add branch:
+      - To push: main
+      - Remote name: origin
+- Save
+
+Go to the first job:
+- Configure
+- Post build actions:
+  - Build job 2
+  - Trigger only if stable
+
+To check if it has succeeded, go to your Github repo. Main should be up to date with the dev branch.
+
+![alt text](./Images/git_success.png)
