@@ -73,10 +73,10 @@ When configuring your job **in Jenkins**:
   - Add your Github repo url from the search bar with ```/``` at the end as the url
   - <img src="./Images/giturl.png" alt="alt text" width="300"/>
   - Source code management:
-    - Git (see image below)
+    - Git (see image below build steps)
       - Repository URL: get this from the green code<> button on github, specifically the ssh key
       - <img src="./Images/github_code_url.png" alt="alt text" width="300"/>
-      - In credentials,select ssh username as kind. Put your private ssh key. This includes all the bits that the ```cat``` function pastes (i.e. the ```----Somethin-----``` at the top and bottom)
+      - In credentials, select ssh username as kind. Put your private ssh key. This includes all the bits that the ```cat``` function pastes (i.e. the ```----Somethin-----``` at the top and bottom)
       - Branch specifier: ```*/dev``` for setting up webhook
 - Build environment: 
   - Provide Node & npm bin/ folder to PATH
