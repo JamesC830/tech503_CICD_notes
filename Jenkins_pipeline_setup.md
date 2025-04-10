@@ -4,6 +4,10 @@
 
 ![alt text](./Images/CI_pipeline.png)
 
+### CI/CDE Pipeline diagram
+
+![alt text](./Images/CICDE_pipeline.png)
+
 # CI - Continuous Integration
 
 Before you start you should have a private Github repo setup with the unzipped files you need
