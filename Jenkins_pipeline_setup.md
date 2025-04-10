@@ -10,7 +10,7 @@ Before you start you should have a private Github repo setup with the unzipped f
 
 ## Creating a job
 
-In Jenkins:
+**In Jenkins:**
 
 <img src="./Images/jenkins_dash.png" alt="alt text" width="200"/>
 
@@ -38,7 +38,7 @@ Go to dashboard to see all items
 
 If you have created 2 jobs, you can chain them together. This means that the second job will atomatically be built and tested after the first is complete.
 
-- Go to the first job
+- **Go to the first job**
 - Configure
 - Post build actions:
   - Build other projects:
@@ -51,11 +51,11 @@ If you have created 2 jobs, you can chain them together. This means that the sec
 
 **Connecting a key-pair to your Github repo**
 
-- In your .ssh folder in Git Bash, create a new ssh key pair using the command:
+- **In your .ssh folder in Git Bash**, create a new ssh key pair using the command:
 
 ```ssh-keygen -t rsa -b 4096 -C "placeholder@hotmail.com"```
 
-- Go to your Github repo
+- **Go to your Github repo**
 - Settings:
   - Deploy keys: 
     - Add deploy key
@@ -64,7 +64,7 @@ If you have created 2 jobs, you can chain them together. This means that the sec
 
 **Connecting your Github repo to your Jenkins job**
 
-When configuring your job in Jenkins:
+When configuring your job **in Jenkins**:
 - Select Github project:
   - Add your Github repo url from the search bar with ```/``` at the end as the url
   - <img src="./Images/giturl.png" alt="alt text" width="300"/>
@@ -89,11 +89,11 @@ npm test
 
 ## Setting up a webhook
 
-Jenkins Job Configure:
+**Jenkins Job** Configure:
 - Branch specifier: ```*/dev``` for setting up webhook
 - Build triggers: GitHub hook trigger for GITScm polling
 
-Back to the Github repo:
+Back to the **Github repo**:
 - Settings:
   - Add webhook:
     - Payload URL:
@@ -101,14 +101,14 @@ Back to the Github repo:
       - e.g. http://34.243.28.200:8080/github-webhook/
     - SSL verification: Disable (Only for testing, not good practice)
 
-Back to local git repo:
+Back to **local git repo**:
 - Switch to the dev branch: ```git checkout -b dev```
 - Make a change (e.g. to README)
 - Push to github: ```git push -u origin dev```
 
 ## Setting up a merge
 
-Make a second Jenkins job:
+Make a **second Jenkins job**:
 - Name: james-job2-ci-merge-test
 - Copy from: your first job (e.g. james-job1-ci-test) which duplicates the first job
 - Settings to change:
@@ -123,12 +123,71 @@ Make a second Jenkins job:
       - Remote name: origin
 - Save
 
-Go to the first job:
+Go to the **first job**:
 - Configure
 - Post build actions:
   - Build job 2
   - Trigger only if stable
 
-To check if it has succeeded, go to your Github repo. Main should be up to date with the dev branch.
+To check if it has succeeded, go to your **Github repo**. Main should be up to date with the dev branch.
 
 ![alt text](./Images/git_success.png)
+
+# CDE -Continuous deplyment
+
+Make **EC2 instanc**e to host deployed app:
+- Name: tech503-james-cde-test
+- Images: Use app image
+- Key-pair: The usual
+- Security group: Basic (Ports 22 and 80)
+- No user data as Jenkins runs the commands
+
+In a **3rd Jenkins job**:
+- New item
+- Name: james-job3-cde-test
+- Copy from: your 2nd job (james-job2-ci-merge-test)
+- Changes:
+  - Branch specifier: main
+  - Build environment: Add SSH agent
+    - (Here you add your private aws ssh key)
+    - SSH username
+    - ID: tech503-james-aws-key
+    - Username can be the same as ID
+    - Enter directly: result of ```cat tech503-james-aws-key.pem```
+  - Remove post build action
+  - Remove build steps
+  - Add new build step:
+    - Execute shell: DNS needs to be changed in the below
+
+```
+rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@DNS:/home/ubuntu
+ssh -o "StrictHostKeyChecking=no" ubuntu@DNS <<EOF
+   cd app
+   npm install
+   pm2 kill
+   pm2 start app.js
+EOF
+```
+
+Highlighted in the image below is the DNS
+
+Public IP may work as well
+
+![alt text](./Images/DNS.png)
+
+Go to **2nd job**:
+- Configure
+- Post build actions:
+  - Build other projects:
+    - Add job 3
+    - Put this to the bottom of the queue of post build action
+
+To test it works go to **local git repo**:
+- app -> views -> nano index.ejs
+- Change either the image or line 27 text
+- Do a git push
+
+![alt text](./Images/result.png)
+
+
+
