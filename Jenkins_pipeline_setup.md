@@ -64,7 +64,7 @@ If you have created 2 jobs, you can chain them together. This means that the sec
   - Deploy keys: 
     - Add deploy key
     - Copy and paste the output from your public ssh key using ```cat public_key_name.pub```
-    - Allow write access
+    - Allow write access (Otherwise it won't merge changes to the main branch)
 
 **Connecting your Github repo to your Jenkins job**
 
@@ -139,7 +139,7 @@ To check if it has succeeded, go to your **Github repo**. Main should be up to d
 
 # CDE -Continuous deplyment
 
-Make **EC2 instanc**e to host deployed app:
+Make **EC2 instance** to host deployed app:
 - Name: tech503-james-cde-test
 - Images: Use app image
 - Key-pair: The usual
@@ -161,7 +161,7 @@ In a **3rd Jenkins job**:
   - Remove post build action
   - Remove build steps
   - Add new build step:
-    - Execute shell: DNS needs to be changed in the below
+    - Execute shell: DNS needs to be changed in the below. (See highlighted text in the image below)
 
 ```
 rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@DNS:/home/ubuntu
@@ -173,9 +173,14 @@ ssh -o "StrictHostKeyChecking=no" ubuntu@DNS <<EOF
 EOF
 ```
 
-Highlighted in the image below is the DNS
-
-Public IP may work as well
+Command explanations:
+- **rsync**: Transfer and synchronize files between systems over a remote shell (like SSH)
+- **-a**: Archive mode: Makes the copy as true to the original as possible
+- **-v**: Verbose: Shows you what’s happening during the transfer (e.g., file names being copied)
+- **-z**:  Compression: Compresses file data during the transfer to speed it up
+- **-e**: Lets you define the remote shell
+- **-o StrictHostKeyChecking=no**: Tells SSH not to prompt you to confirm the host’s authenticity if it’s not in your known hosts file.
+- **ubuntu@DNS <<EOF**: Says to act as the ubuntu user utill EOF is mentioned a second time
 
 ![alt text](./Images/DNS.png)
 
