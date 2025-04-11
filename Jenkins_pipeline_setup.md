@@ -193,5 +193,48 @@ To test it works go to **local git repo**:
 
 ![alt text](./Images/result.png)
 
+## Checklist
 
+Below is a summary/checklist of everthing that needs to be set up to work.
+
+Git:
+- 2 ssh keys (One for AWS, one for Jenkins)
+- A repo for the app connected to a github repo
+- Set branch to dev
+
+Github:
+- Jenkins deploy key connected
+- Webhook to Jenkins url with SSL disabled
+
+AWS:
+- EC2 instance
+- Using app image
+- Usual key pair
+- Security group: Ports 22 and 80
+
+Jenkins:
+- Job 1 (Build and test):
+  - Freestyle project
+  - Discard old builds: Max to keep: 3
+  - Github project: Added repo URL and Jenkins ssh key. Branch specifier dev
+  - Build triggers: Github hook trigger
+  - Build environment: NodeJS version 20
+  - Build steps: Install and test the app
+  - Post build action: Build job 2, trigger only if stable
+- Job 2 (Merge):
+  - Copy job 1
+  - Remove build trigger
+  - Remove build steps
+  - Post build action:
+    - Git publisher: Push only if build succeeds. Merge results
+    - Add branch:
+To push: main, Remote name: origin
+  - Post build action: trigger job 3 (at bottom of queue)
+- Job 3 (Deploy):
+  - Copy job 2
+  - Branch specifier: main
+  - Build environment: Add SSH agent (Jenkins private key)
+  - Remove post build action
+  - Remove build steps
+  - Add new build step: Execute shell: Starts the app
 
