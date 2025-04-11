@@ -9,7 +9,7 @@ Jenkins EC2 instance:
 - Security group:
   - Name: tech503-james-jenkins-sg
   - Ports: 22, 80 and 8080 (Jenkins runs on port 8080)
-- Connect to VPC: To do this, use VPCs_notes
+- Connect to VPC: To do this, use [VPCs notes](https://github.com/JamesC830/tech_503_cloud_comp_notes/blob/main/VPCs_notes.md)
 - Launch instance
 
 When logged in to the instance in git:
@@ -108,6 +108,9 @@ Follow url: http://52.49.168.207:8080/
 
 ![alt text](./Images/it_worked.png)
 
+
+Make an image of the jenkins aws instance:
+- Name: tech503-james-jenkins-image
 
 
 
